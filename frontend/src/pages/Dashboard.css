@@ -1,0 +1,99 @@
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.connect-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.prompt-card {
+  background: white;
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 800px;
+}
+
+.prompt-card h2 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.prompt-card > p {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.feature {
+  padding: 1rem;
+}
+
+.feature .icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.feature h3 {
+  color: #333;
+  margin: 0.5rem 0;
+}
+
+.feature p {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.dashboard-header h1 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.dashboard-content {
+  display: grid;
+  gap: 2rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1rem;
+  }
+
+  .prompt-card {
+    padding: 2rem;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+}
