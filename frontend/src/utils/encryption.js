@@ -14,21 +14,21 @@ export const encryptData = async (data, password) => {
   const encoder = new TextEncoder();
   const dataBuffer = encoder.encode(JSON.stringify(data));
   
+  const salt = window.crypto.getRandomValues(new Uint8Array(16));
+  
   const keyMaterial = await window.crypto.subtle.importKey(
     'raw',
-    encoder.encode(password.padEnd(32, '0').substring(0, 32)),
+    encoder.encode(password),
     { name: 'PBKDF2' },
     false,
     ['deriveBits', 'deriveKey']
   );
-
-  const salt = window.crypto.getRandomValues(new Uint8Array(16));
   
   const key = await window.crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',
       salt: salt,
-      iterations: 100000,
+      iterations: 250000,
       hash: 'SHA-256'
     },
     keyMaterial,
@@ -57,7 +57,7 @@ export const decryptData = async (encryptedData, password) => {
   
   const keyMaterial = await window.crypto.subtle.importKey(
     'raw',
-    encoder.encode(password.padEnd(32, '0').substring(0, 32)),
+    encoder.encode(password),
     { name: 'PBKDF2' },
     false,
     ['deriveBits', 'deriveKey']
@@ -67,7 +67,7 @@ export const decryptData = async (encryptedData, password) => {
     {
       name: 'PBKDF2',
       salt: new Uint8Array(encryptedData.salt),
-      iterations: 100000,
+      iterations: 250000,
       hash: 'SHA-256'
     },
     keyMaterial,

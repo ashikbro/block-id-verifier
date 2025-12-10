@@ -15,9 +15,13 @@ describe("IdentityRegistry", function () {
   describe("Identity Creation", function () {
     it("Should create a new identity", async function () {
       const ipfsHash = "QmTest123";
-      await expect(identityRegistry.connect(user1).createIdentity(ipfsHash))
+      const tx = await identityRegistry.connect(user1).createIdentity(ipfsHash);
+      const receipt = await tx.wait();
+      const block = await ethers.provider.getBlock(receipt.blockNumber);
+      
+      await expect(tx)
         .to.emit(identityRegistry, "IdentityCreated")
-        .withArgs(user1.address, ipfsHash, await ethers.provider.getBlock("latest").then(b => b.timestamp + 1));
+        .withArgs(user1.address, ipfsHash, block.timestamp);
 
       expect(await identityRegistry.identityExists(user1.address)).to.be.true;
     });

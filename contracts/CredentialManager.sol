@@ -35,7 +35,6 @@ contract CredentialManager is AccessControl {
         uint256 issuedAt
     );
     event CredentialRevoked(bytes32 indexed credentialId, uint256 timestamp);
-    event CredentialShared(bytes32 indexed credentialId, address indexed viewer, uint256 timestamp);
     
     constructor() {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);

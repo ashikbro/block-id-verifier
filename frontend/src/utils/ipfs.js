@@ -24,8 +24,15 @@ export const uploadToIPFS = async (data) => {
     console.error('Error uploading to IPFS:', error);
     
     // Fallback to local storage simulation for development
-    const hash = `Qm${btoa(JSON.stringify(data)).substring(0, 44)}`;
-    localStorage.setItem(`ipfs_${hash}`, JSON.stringify(data));
+    // Generate a unique hash using SHA-256
+    const dataString = JSON.stringify(data);
+    const encoder = new TextEncoder();
+    const dataBuffer = encoder.encode(dataString);
+    const hashBuffer = await window.crypto.subtle.digest('SHA-256', dataBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    const hash = `Qm${hashHex.substring(0, 44)}`;
+    localStorage.setItem(`ipfs_${hash}`, dataString);
     return hash;
   }
 };
@@ -68,10 +75,25 @@ const encryptData = async (data, key) => {
   const encoder = new TextEncoder();
   const dataBuffer = encoder.encode(data);
   
-  const cryptoKey = await window.crypto.subtle.importKey(
+  const salt = window.crypto.getRandomValues(new Uint8Array(16));
+  
+  const keyMaterial = await window.crypto.subtle.importKey(
     'raw',
-    encoder.encode(key.padEnd(32, '0').substring(0, 32)),
-    { name: 'AES-GCM' },
+    encoder.encode(key),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits', 'deriveKey']
+  );
+  
+  const cryptoKey = await window.crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt: salt,
+      iterations: 250000,
+      hash: 'SHA-256'
+    },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 },
     false,
     ['encrypt']
   );
@@ -84,6 +106,7 @@ const encryptData = async (data, key) => {
   );
 
   return {
+    salt: Array.from(salt),
     iv: Array.from(iv),
     data: Array.from(new Uint8Array(encryptedBuffer))
   };
@@ -92,10 +115,23 @@ const encryptData = async (data, key) => {
 const decryptData = async (encryptedData, key) => {
   const encoder = new TextEncoder();
   
-  const cryptoKey = await window.crypto.subtle.importKey(
+  const keyMaterial = await window.crypto.subtle.importKey(
     'raw',
-    encoder.encode(key.padEnd(32, '0').substring(0, 32)),
-    { name: 'AES-GCM' },
+    encoder.encode(key),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits', 'deriveKey']
+  );
+  
+  const cryptoKey = await window.crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt: new Uint8Array(encryptedData.salt),
+      iterations: 250000,
+      hash: 'SHA-256'
+    },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 },
     false,
     ['decrypt']
   );

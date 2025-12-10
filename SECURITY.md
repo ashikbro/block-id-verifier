@@ -18,9 +18,10 @@ Block ID Verifier implements multiple layers of security to protect user identit
 
 ### Key Derivation
 - **Algorithm**: PBKDF2 (Password-Based Key Derivation Function 2)
-- **Iterations**: 100,000 (protects against brute-force attacks)
+- **Iterations**: 250,000 (increased from standard to enhance protection against brute-force attacks)
 - **Hash Function**: SHA-256
 - **Salt**: Randomly generated 16-byte salt for each encryption
+- **Key Size**: Full password is used without truncation or padding
 
 ## Smart Contract Security
 

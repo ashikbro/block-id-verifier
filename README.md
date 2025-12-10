@@ -76,6 +76,8 @@ VITE_IPFS_PROJECT_SECRET=your_infura_project_secret
 
 **Note**: The application includes a fallback to local storage for development if IPFS credentials are not provided.
 
+**Important**: The `frontend/src/contracts/deployments.json` file contains placeholder addresses (0x000...000). These will be automatically updated when you run the deployment script (step 2 in Usage section). If you're deploying to a different network, make sure to update this file with the actual deployed contract addresses.
+
 ## 🎯 Usage
 
 ### 1. Start Local Blockchain
