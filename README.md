@@ -1,2 +1,18 @@
-# block-id-verifier
-Secure, decentralized identity verification system using blockchain. Store credentials in a user-owned wallet and verify authenticity via smart contracts.
+# Block ID Verifier
+
+A signed credential-verification foundation for user-owned identity records.
+
+## Current status
+
+The repository includes standard-library HMAC credential issuance and
+tamper-detection. Blockchain anchoring, wallets, key rotation, revocation, and
+network APIs are not implemented yet; secrets must remain outside source
+control.
+
+## Development
+
+```sh
+python -m venv .venv
+.venv/bin/pip install pytest
+PYTHONPATH=src .venv/bin/pytest
+```
